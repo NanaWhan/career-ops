@@ -1,10 +1,5 @@
 # Career-Ops
 
-[English](README.md) | [Español](README.es.md)
-
-<p align="center">
-  <a href="https://cherishseinty.dev"><img src="docs/hero-banner.jpg" alt="Career-Ops — Multi-Agent Job Search System" width="800"></a>
-</p>
 
 <p align="center">
   <em>I spent months applying to jobs the hard way. So I engineered the system I wish I had.</em><br>
