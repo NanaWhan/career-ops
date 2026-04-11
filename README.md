@@ -74,31 +74,30 @@ Built by someone who used it to evaluate 740+ job offers, generate 100+ tailored
 git clone https://github.com/NanaWhan/career-ops.git
 cd career-ops && npm install
 npx playwright install chromium   # Required for PDF generation
-
-# 2. Check setup
-npm run doctor                     # Validates all prerequisites
-
-# 3. Configure
-cp config/profile.example.yml config/profile.yml  # Edit with your details
-cp templates/portals.example.yml portals.yml       # Customize companies
-
-# 4. Add your CV
-# Create cv.md in the project root with your CV in markdown
-
-# 5. Personalize with Claude
-claude   # Open Claude Code in this directory
-
-# Then ask Claude to adapt the system to you:
-# "Change the archetypes to backend engineering roles"
-# "Translate the modes to English"
-# "Add these 5 companies to portals.yml"
-# "Update my profile with this CV I'm pasting"
-
-# 6. Start using
-# Paste a job URL or run /career-ops
 ```
 
-> **The system is designed to be customized by Claude itself.** Modes, archetypes, scoring weights, negotiation scripts -- just ask Claude to change them. It reads the same files it uses, so it knows exactly what to edit.
+**That's it. Claude sets everything else up for you.**
+
+```bash
+# 2. Open Claude Code in this directory
+claude
+
+# Claude will automatically detect that you haven't set up your profile yet
+# and walk you through onboarding step by step:
+#   → Paste your CV (or describe your experience)
+#   → Answer a few questions about your target roles and preferences
+#   → Claude creates config/profile.yml, portals.yml, and data/applications.md
+#
+# Then just paste any job URL to evaluate your first offer.
+```
+
+> **The system is designed to be customized by Claude itself.** Archetypes, scoring weights, negotiation scripts, company lists, portals — just tell Claude what you want to change. It reads the same files it uses, so it knows exactly what to edit.
+>
+> Common customizations:
+> - "My target stack is Node.js and TypeScript" → updates portals.yml + profile
+> - "I'm based in [country], only looking for globally-open remote roles" → updates deal-breakers and filters
+> - "Add these 5 companies to my scanner" → updates portals.yml
+> - "Update my profile with this CV I'm pasting" → updates cv.md and config
 
 See [docs/SETUP.md](docs/SETUP.md) for the full setup guide.
 
@@ -147,18 +146,18 @@ You paste a job URL or description
 
 ## Pre-configured Portals
 
-The scanner comes with **45+ companies** ready to scan and **19 search queries** across major job boards. Copy `templates/portals.example.yml` to `portals.yml` and add your own:
+The scanner comes with **25+ companies** ready to scan, organized by global hiring track record, and **14 search queries** on job boards that serve worldwide remote candidates.
 
-**AI Labs:** Anthropic, OpenAI, Mistral, Cohere, LangChain, Pinecone
-**Voice AI:** ElevenLabs, PolyAI, Parloa, Hume AI, Deepgram, Vapi, Bland AI
-**AI Platforms:** Retool, Airtable, Vercel, Temporal, Glean, Arize AI
-**Contact Center:** Ada, LivePerson, Sierra, Decagon, Talkdesk, Genesys
-**Enterprise:** Salesforce, Twilio, Gong, Dialpad
-**LLMOps:** Langfuse, Weights & Biases, Lindy, Cognigy, Speechmatics
-**Automation:** n8n, Zapier, Make.com
-**European:** Factorial, Attio, Tinybird, Clarity AI, Travelperk
+**Globally distributed (hire on every continent):** GitLab, Automattic, Grafana Labs, Doist, Buffer, Elastic, MongoDB, Netlify, Hotjar, Help Scout
+**African tech (Africa-based or Africa-friendly):** Flutterwave, Paystack, Wave, Chipper Cash, Andela, Kuda Bank, Mono, Stitch
+**Large companies with international programs:** Datadog, Twilio, Cloudflare, Stripe, Zapier
+**Remote-first dev tools:** Supabase, Fly.io, Neon, Turso
 
-**Job boards searched:** Ashby, Greenhouse, Lever, Wellfound, Workable, RemoteFront
+**Job boards searched:** We Work Remotely (worldwide), Remotive, Arc.dev, Jobgether, Greenhouse, Lever, Ashby
+
+> **About global remote filtering:** The scanner pre-screens each listing for global eligibility — roles restricted to US/EU residents are flagged and skipped automatically. Every company in the default config has been verified to have a global or Africa-friendly hiring track record.
+>
+> Want different companies? Just tell Claude: "Add [company] to my portals" or "Replace this list with companies in the fintech space." Claude edits portals.yml directly.
 
 ## Dashboard TUI
 
@@ -220,9 +219,18 @@ career-ops/
 
 ## About
 
-This is a customized fork of [NanaWhan/career-ops](https://github.com/NanaWhan/career-ops) — an open-source AI job search pipeline built on Claude Code. Full credit to the original author for the system design, evaluation logic, and tooling.
+This is a fork of [santifer/career-ops](https://github.com/santifer/career-ops) — an open-source AI job search pipeline originally built by [Santiago](https://santifer.io) to evaluate 740+ job offers and land a Head of Applied AI role. Full credit to the original author for the system design, evaluation logic, and tooling.
 
-**Forked and adapted by [Cherish Banini Seinty](https://cherishseinty.dev)** — Lead Software Engineer specializing in distributed systems, defense-grade platforms, and AI-integrated products. Based in Accra, Ghana. Working remotely with global teams.
+**This fork is maintained by [Cherish Banini Seinty](https://cherishseinty.dev)** — Lead Software Engineer specializing in distributed systems, defense-grade platforms, and AI-integrated products. Based in Accra, Ghana. Working remotely with global teams.
+
+**What's different in this fork:**
+- Portal scanner rebuilt for globally-open remote roles (no US/EU-only companies)
+- Pre-screening step filters out listings that require local work authorization
+- African tech companies added (Flutterwave, Paystack, Wave, Chipper Cash, and more)
+- Global remote job boards added (We Work Remotely, Remotive, Arc.dev, Jobgether)
+- Profile and archetypes tuned for Backend / Full-Stack engineering roles
+
+It works for anyone, anywhere. If the default company list doesn't match your career, just tell Claude to change it — that's what this system is built for.
 
 Portfolio and projects → [cherishseinty.dev](https://cherishseinty.dev)
 

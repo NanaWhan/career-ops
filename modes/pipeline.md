@@ -4,15 +4,26 @@ Procesa URLs de ofertas acumuladas en `data/pipeline.md`. El usuario agrega URLs
 
 ## Workflow
 
-1. **Leer** `data/pipeline.md` → buscar items `- [ ]` en la sección "Pendientes"
-2. **Para cada URL pendiente**:
-   a. Calcular siguiente `REPORT_NUM` secuencial (leer `reports/`, tomar el número más alto + 1)
-   b. **Extraer JD** usando Playwright (browser_navigate + browser_snapshot) → WebFetch → WebSearch
-   c. Si la URL no es accesible → marcar como `- [!]` con nota y continuar
-   d. **Ejecutar auto-pipeline completo**: Evaluación A-F → Report .md → PDF (si score >= 3.0) → Tracker
-   e. **Mover de "Pendientes" a "Procesadas"**: `- [x] #NNN | URL | Empresa | Rol | Score/5 | PDF ✅/❌`
-3. **Si hay 3+ URLs pendientes**, lanzar agentes en paralelo (Agent tool con `run_in_background`) para maximizar velocidad.
-4. **Al terminar**, mostrar tabla resumen:
+1. **Read** `data/pipeline.md` → find `- [ ]` items in the Pending section
+2. **For each pending URL**:
+   a. Calculate next sequential `REPORT_NUM` (read `reports/`, take highest number + 1)
+   b. **Fetch the JD** using Playwright (browser_navigate + browser_snapshot) → WebFetch → WebSearch
+   c. If URL not accessible → mark as `- [!]` with note and continue
+
+   ### STEP 0 — Global Remote Pre-Screen (MANDATORY, runs before full eval)
+   Read `modes/_profile.md` → "Global Remote Eligibility" section.
+   Scan the JD for location/eligibility signals:
+   - **FAIL (→ SKIP immediately):** "Remote — US only", "US residents/citizens only", requires work authorization in US/UK/EU, lists specific US states, requires relocation
+   - **PASS (→ proceed to full eval):** "Remote (global)", "Worldwide", "Open to international candidates", EMEA/APAC listed, no country restriction stated
+   - **AMBIGUOUS (→ evaluate but flag):** Just says "Remote" with no country specified — run full eval but add note: ⚠️ *Confirm global eligibility with recruiter before applying*
+
+   If SKIP: mark as `- [x] #--- | URL | Company | Role | SKIP — not globally open | PDF ❌` and move on. No full evaluation.
+
+   d. **Run full auto-pipeline**: A–F evaluation → Report .md → PDF (if score >= 3.0) → Tracker
+   e. **Move from Pending to Processed**: `- [x] #NNN | URL | Company | Role | Score/5 | PDF ✅/❌`
+
+3. **If 3+ pending URLs**, launch agents in parallel (Agent tool with `run_in_background`) for speed.
+4. **When done**, show summary table:
 
 ```
 | # | Empresa | Rol | Score | PDF | Acción recomendada |

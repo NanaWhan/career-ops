@@ -11,46 +11,39 @@
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/santifer/career-ops.git
+git clone https://github.com/NanaWhan/career-ops.git
 cd career-ops
 npm install
 npx playwright install chromium   # Required for PDF generation
 ```
 
-### 2. Configure your profile
-
-```bash
-cp config/profile.example.yml config/profile.yml
-```
-
-Edit `config/profile.yml` with your personal details: name, email, target roles, narrative, proof points.
-
-### 3. Add your CV
-
-Create `cv.md` in the project root with your full CV in markdown format. This is the source of truth for all evaluations and PDFs.
-
-(Optional) Create `article-digest.md` with proof points from your portfolio projects/articles.
-
-### 4. Configure portals
-
-```bash
-cp templates/portals.example.yml portals.yml
-```
-
-Edit `portals.yml`:
-- Update `title_filter.positive` with keywords matching your target roles
-- Add companies you want to track in `tracked_companies`
-- Customize `search_queries` for your preferred job boards
-
-### 5. Start using
-
-Open Claude Code in this directory:
+### 2. Open Claude Code — it guides the rest
 
 ```bash
 claude
 ```
 
-Then paste a job offer URL or description. Career-ops will automatically evaluate it, generate a report, create a tailored PDF, and track it.
+Career-ops detects whether you've set up your profile, CV, and portals. If any are missing, it automatically enters **onboarding mode** and walks you through each step:
+
+1. **CV** — Paste your CV, share your LinkedIn URL, or describe your experience. Claude converts it to `cv.md`.
+2. **Profile** — Claude asks for your target roles, salary expectations, location preferences, and deal-breakers. Saved to `config/profile.yml` and `modes/_profile.md`.
+3. **Portals** — Claude configures the scanner for your target roles and market. Saved to `portals.yml`.
+
+> **You don't need to edit YAML files manually.** Just answer Claude's questions in plain language. The more context you give it (your career story, your stack, what you want to avoid, your best achievements), the better every evaluation will be.
+
+If you prefer to set things up manually:
+
+```bash
+cp config/profile.example.yml config/profile.yml
+cp templates/portals.example.yml portals.yml
+# then create cv.md with your CV in markdown format
+```
+
+### 3. Start evaluating
+
+Once setup is done, paste any job URL directly into Claude Code. Career-ops evaluates it, generates a report, creates a tailored PDF, and tracks it — all automatically.
+
+Or run `/career-ops scan` to pull fresh listings from your configured portals.
 
 ## Available Commands
 
