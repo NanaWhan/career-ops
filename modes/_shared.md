@@ -98,6 +98,46 @@ After detecting archetype, read `modes/_profile.md` for the user's specific fram
 | Edit | Update tracker |
 | Canva MCP | Optional visual CV generation. Duplicate base design, edit text, export PDF. Requires `canva_resume_design_id` in profile.yml. |
 | Bash | `node generate-pdf.mjs` |
+| Gmail MCP (`gmail_search_messages`, `gmail_read_thread`) | Prior contact check. Run before every evaluation (see Gmail Pre-Check below). |
+
+---
+
+## Gmail Pre-Check (runs before EVERY evaluation)
+
+**Purpose:** Avoid duplicate applications, surface active processes, flag recent rejections — all without the user having to remember.
+
+**When to run:** Before Block A of any evaluation (auto-pipeline, oferta, pipeline mode). Takes ~5 seconds. Never skip.
+
+**How to run:**
+
+1. Extract company name from the URL or JD header (e.g. `Keragon`, `GitLab`, `MyEdSpace`).
+2. Call `gmail_search_messages` with:
+   ```
+   q: "{company name}" after:2025/01/01
+   maxResults: 10
+   ```
+3. Scan subject lines and snippets for signal words:
+   - **Applied/Pending:** "thank you for applying", "application received", "we've received your"
+   - **Rejected:** "unfortunately", "we regret", "not moving forward", "moved to the next step", "other candidates"
+   - **Interview:** "schedule", "next steps", "speak with", "technical interview", "meet with"
+   - **Offer:** "pleased to offer", "offer letter", "compensation package"
+4. If a signal is found, read the thread with `gmail_read_thread` to confirm and get the date.
+
+**What to output:**
+
+Include a `**Prior Contact:**` line in the evaluation header (between Score and URL):
+
+| Finding | Header line |
+|---------|------------|
+| No emails found | `**Prior Contact:** None found` |
+| Applied, no response | `**Prior Contact:** ⏳ Applied [date] — no response yet. Confirm this is a different role before proceeding.` |
+| Rejected | `**Prior Contact:** ❌ Rejected by [Company] on [date]. Evaluate with caution — standard wait is 3–6 months before reapplying.` |
+| Active interview | `**Prior Contact:** 🔴 ACTIVE PROCESS at [Company] — interview stage as of [date]. Do not apply to a second role here without reviewing.` |
+| Offer received | `**Prior Contact:** 🟢 Offer received from [Company] on [date]. Check tracker before proceeding.` |
+
+**If rejected recently (< 60 days):** Add 1 point deduction to Cultural/Red Flags dimension and note it explicitly in Block A.
+
+**If active interview exists:** Stop evaluation. Notify user immediately: "You have an active interview at [Company] — do you want to proceed with evaluating this additional role there?"
 
 ### Time-to-offer priority
 - Working demo + metrics > perfection

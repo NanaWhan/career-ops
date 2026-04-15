@@ -10,6 +10,15 @@ Procesa URLs de ofertas acumuladas en `data/pipeline.md`. El usuario agrega URLs
    b. **Fetch the JD** using Playwright (browser_navigate + browser_snapshot) → WebFetch → WebSearch
    c. If URL not accessible → mark as `- [!]` with note and continue
 
+   ### STEP -1 — Gmail Pre-Check (MANDATORY, runs first)
+   Call `gmail_search_messages` with `q: "{company name}" after:2025/01/01 maxResults:10`.
+   Classify the result and add a `**Prior Contact:**` line to the report header.
+   Full logic in `modes/_shared.md` → "Gmail Pre-Check" section.
+   - If active interview found → STOP, notify user before proceeding.
+   - If rejected < 60 days ago → flag in header, apply -1 to Red Flags score.
+   - If applied with no response → flag and confirm this is a different role.
+   - If no emails → proceed normally.
+
    ### STEP 0 — Global Remote Pre-Screen (MANDATORY, runs before full eval)
    Read `modes/_profile.md` → "Global Remote Eligibility" section.
    Scan the JD for location/eligibility signals:
